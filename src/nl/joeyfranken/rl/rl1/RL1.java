@@ -1,9 +1,9 @@
-package nl.joeyfranken.rl.RL1;
+package nl.joeyfranken.rl.rl1;
 
-import nl.joeyfranken.rl.RL1.Grid.Grid;
-import nl.joeyfranken.rl.RL1.Grid.Tile;
-import nl.joeyfranken.rl.RL1.Level.Level;
-import nl.joeyfranken.rl.RL1.graphics.Graphics;
+import nl.joeyfranken.rl.rl1.entity.Player;
+import nl.joeyfranken.rl.rl1.graphics.Graphics;
+import nl.joeyfranken.rl.rl1.grid.Grid;
+import nl.joeyfranken.rl.rl1.level.Level;
 
 public class RL1 {
 
@@ -14,10 +14,9 @@ public class RL1 {
 	
 	public RL1() {
 		level = new Level(1, 1);
+		Player player = new Player(level, 4, 4);
+		level.setPlayer(player);
 		grid = new Grid(20, 15);
-		Tile tile = new Tile(1, 1);
-		tile.addCharacter("@");
-		grid.setTile(tile);
 		graphics = new Graphics(this);
 		graphics.setGrid(grid);
 		graphicsThread = new Thread(graphics);

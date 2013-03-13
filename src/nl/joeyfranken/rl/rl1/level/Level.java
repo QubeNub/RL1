@@ -1,4 +1,7 @@
-package nl.joeyfranken.rl.RL1.Level;
+package nl.joeyfranken.rl.rl1.level;
+
+import nl.joeyfranken.rl.rl1.entity.Entity;
+import nl.joeyfranken.rl.rl1.entity.Player;
 
 public class Level {
 
@@ -16,14 +19,20 @@ public class Level {
 	   	                   			{2,2,2,2,2,2,2,2,2,2,2,2}
 	   	                   		};
 	
-	private TileType tiles[][];
+	private Tile tiles[][];
 	private int width, height;
+
+	private Player player;
 	
 	public Level(int width, int height) {
 		this.width = width;
 		this.height = height;
-		tiles = new TileType[width][height];
+		tiles = new Tile[width][height];
 		intArrayToLevel(defaultMap);
+	}
+	
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 
 	public int getWidth() {
@@ -34,7 +43,7 @@ public class Level {
 		return height;
 	}
 	
-	public void setTile(int x, int y, TileType type) {
+	public void setTile(int x, int y, Tile type) {
 		if(x < width && y < height) {
 			tiles[x][y] = type;
 		}
@@ -43,13 +52,13 @@ public class Level {
 	public void setTile(int x, int y, int tile) {
 		switch(tile) {
 		case 0:
-			setTile(x, y, TileType.NONE);
+			setTile(x, y, new Tile(TileType.NONE, x, y));
 			break;
 		case 1:
-			setTile(x, y, TileType.FLOOR);
+			setTile(x, y, new Tile(TileType.FLOOR, x, y));
 			break;
 		case 2:
-			setTile(x, y, TileType.WALL);
+			setTile(x, y, new Tile(TileType.WALL, x, y));
 			break;
 		}
 	}
@@ -59,7 +68,7 @@ public class Level {
 		if(array.length != width || array[0].length != height) {
 			width = array.length;
 			height = array[0].length;
-			tiles = new TileType[width][height];
+			tiles = new Tile[width][height];
 		}
 		width = array.length;
 		height = array[0].length;
@@ -70,10 +79,21 @@ public class Level {
 		}
 	}
 
-	public TileType getTile(int x, int y) {
+	public Tile getTile(int x, int y) {
 		if(x < width && y < height) {
 			return tiles[x][y];
 		}
 		return null;
+	}
+
+	public Player getPlayer() {
+		return player;
+	}
+
+	public boolean isValidMove(Entity entity, int x, int y) {
+		if(x < width && y < height && x >= 0 && y >= 0 && tiles[x][y].isSolid()) {
+			return false;
+		}
+		return true;
 	}
 }

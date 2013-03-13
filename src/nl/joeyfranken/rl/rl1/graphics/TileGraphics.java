@@ -1,19 +1,17 @@
-package nl.joeyfranken.rl.RL1.graphics;
+package nl.joeyfranken.rl.rl1.graphics;
 
-import java.awt.image.BufferedImage;
-
-import nl.joeyfranken.rl.RL1.Level.TileType;
+import nl.joeyfranken.rl.rl1.level.TileType;
 
 public class TileGraphics {
-	public static BufferedImage getImageForTile(TileType tile, TileSet tileSet) {
-		switch(tile) {
-		case NONE:
-			return new BufferedImage(Graphics.TILE_SIZE, Graphics.TILE_SIZE, BufferedImage.TYPE_INT_RGB);
+	public static char getCharForTile(TileType tile) {
+		switch (tile) {
 		case FLOOR:
-			return tileSet.getTileImage(3, 7);
+			return '.';
 		case WALL:
-			return tileSet.getTileImage(0, 3);
+			return '#';
+		default:
+			return ' ';
+
 		}
-		return null;
 	}
 }

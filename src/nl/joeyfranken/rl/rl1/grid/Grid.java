@@ -1,20 +1,21 @@
-package nl.joeyfranken.rl.RL1.Grid;
+package nl.joeyfranken.rl.rl1.grid;
 
 import java.awt.Graphics2D;
 
 public class Grid {
 
-	private Tile[][] tiles;
+	public static final boolean ANTIALIASING = true;
+	private Cell[][] cells;
 	private int width, height;
 	
 	public Grid(int width, int height) {
 		this.width = width;
 		this.height = height;
-		tiles = new Tile[width][height];
-		for (int y = 0; y < tiles[0].length; y++) {
-			for (int x = 0; x < tiles.length; x++) {
-				tiles[x][y] = new Tile(x, y);
-				tiles[x][y].addCharacter("·");
+		cells = new Cell[width][height];
+		for (int y = 0; y < cells[0].length; y++) {
+			for (int x = 0; x < cells.length; x++) {
+				cells[x][y] = new Cell(x, y);
+				cells[x][y].addChar('#');
 			}
 		}
 	}
@@ -27,31 +28,31 @@ public class Grid {
 		return height;
 	}
 
-	public void setTile(Tile tile) {
-		if(tile != null && tile.getX() < width && tile.getY() < height) {
-			tiles[tile.getX()][tile.getY()] = tile;
+	public void setTile(Cell cell) {
+		if(cell != null && cell.getX() < width && cell.getY() < height) {
+			cells[cell.getX()][cell.getY()] = cell;
 		}
 	}
 	
-	public Tile getTile(int x, int y) {
+	public Cell getTile(int x, int y) {
 		if(x < width && y < height) {
-			return tiles[x][y];
+			return cells[x][y];
 		}
 		return null;
 	}
 	
 	public void draw(Graphics2D g) {
-		for (int y = 0; y < tiles[0].length; y++) {
-			for (int x = 0; x < tiles.length; x++) {
-				tiles[x][y].draw(g);
+		for (int y = 0; y < cells[0].length; y++) {
+			for (int x = 0; x < cells.length; x++) {
+				cells[x][y].draw(g);
 			}
 		}
 	}
 	
 	public void tick() {
-		for (int y = 0; y < tiles[0].length; y++) {
-			for (int x = 0; x < tiles.length; x++) {
-				tiles[x][y].tick();
+		for (int y = 0; y < cells[0].length; y++) {
+			for (int x = 0; x < cells.length; x++) {
+				cells[x][y].tick();
 			}
 		}		
 	}

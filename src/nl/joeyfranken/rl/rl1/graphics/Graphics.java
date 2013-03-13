@@ -1,4 +1,4 @@
-package nl.joeyfranken.rl.RL1.graphics;
+package nl.joeyfranken.rl.rl1.graphics;
 
 import java.awt.Canvas;
 import java.awt.Color;
@@ -8,23 +8,18 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.InputStream;
 
-import javax.imageio.ImageIO;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 
-import nl.joeyfranken.rl.RL1.RL1;
-import nl.joeyfranken.rl.RL1.Grid.Grid;
-import nl.joeyfranken.rl.RL1.Grid.Tile;
-import nl.joeyfranken.rl.RL1.Level.Level;
+import nl.joeyfranken.rl.rl1.RL1;
+import nl.joeyfranken.rl.rl1.grid.Cell;
+import nl.joeyfranken.rl.rl1.grid.Grid;
+import nl.joeyfranken.rl.rl1.level.Level;
 
 public class Graphics extends Canvas implements Runnable {
 
 	private static final long serialVersionUID = 896952198601396240L;
-	private TileSet tileSet;
-	private TileSet entitySet;
 	private boolean running;
 	private JFrame container;
 	private JPanel panel;
@@ -35,12 +30,11 @@ public class Graphics extends Canvas implements Runnable {
 	public static final int SCREEN_WIDTH = 800;
 	public static final int SCREEN_HEIGHT = 600;
 	public static final String GAME_TITLE = "RL1";
-	public final static int TILE_SIZE = 32;
+	public final static int TILE_SIZE = 18;
 	
 	public Graphics(RL1 instance) {
 		this.instance = instance;
 		createWindow();
-		tileSet = new TileSet(Graphics.class.getResourceAsStream("/nl/joeyfranken/rl/RL1/Images/dg_features32.gif"), 32, 32);
 		running = true;
 	}
 
@@ -103,11 +97,12 @@ public class Graphics extends Canvas implements Runnable {
 		}
 		for (int y = 0; y < level.getHeight(); y++) {
 			for (int x = 0; x < level.getWidth(); x++) {
-				Tile tile = new Tile(x, y);
-				tile.addImage(TileGraphics.getImageForTile(level.getTile(x, y), tileSet));
+				Cell tile = new Cell(x, y);
+				tile.addChar(TileGraphics.getCharForTile(level.getTile(x, y).getType()));
 				grid.setTile(tile);
 			}
 		}
+		grid.getTile(instance.level.getPlayer().getX(), instance.level.getPlayer().getY()).addChar('@');
 	}
 
 	private void createWindow() {
@@ -120,7 +115,7 @@ public class Graphics extends Canvas implements Runnable {
 		setBounds(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
 		panel.add(this);
 		
-		//addKeyListener();
+		addKeyListener(new KeyHandler(instance));
 		
 		container.addWindowListener(new WindowAdapter() {
 			public void windowClosing(WindowEvent e) {
