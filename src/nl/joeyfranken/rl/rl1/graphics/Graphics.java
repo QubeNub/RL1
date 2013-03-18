@@ -3,6 +3,7 @@ package nl.joeyfranken.rl.rl1.graphics;
 import java.awt.Canvas;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -13,12 +14,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 
 import nl.joeyfranken.rl.rl1.RL1;
-import nl.joeyfranken.rl.rl1.grid.Cell;
 import nl.joeyfranken.rl.rl1.grid.Grid;
+import nl.joeyfranken.rl.rl1.input.KeyHandler;
 import nl.joeyfranken.rl.rl1.level.Level;
 
 public class Graphics extends Canvas implements Runnable {
 
+	public static final int SCREEN_WIDTH = 800;
+	public static final int SCREEN_HEIGHT = 600;
+	public static final String GAME_TITLE = "RL1";
+	public final static int TILE_SIZE = 24;
+	
 	private static final long serialVersionUID = 896952198601396240L;
 	private boolean running;
 	private JFrame container;
@@ -27,19 +33,17 @@ public class Graphics extends Canvas implements Runnable {
 	private RL1 instance;
 	private Grid grid;
 	
-	public static final int SCREEN_WIDTH = 800;
-	public static final int SCREEN_HEIGHT = 600;
-	public static final String GAME_TITLE = "RL1";
-	public final static int TILE_SIZE = 18;
+	public Font font;
 	
 	public Graphics(RL1 instance) {
 		this.instance = instance;
 		createWindow();
+		font = new Font("Lucida Console", Font.PLAIN, 14);
 		running = true;
 	}
 
 	public void tick() {
-		
+		grid.tick();
 	}
 	
 	@Override
@@ -94,15 +98,15 @@ public class Graphics extends Canvas implements Runnable {
 	public void setGrid(Level level) {
 		if(grid.getWidth() != level.getWidth() || grid.getHeight() != level.getHeight()) {
 			grid = new Grid(level.getWidth(), level.getHeight());
+		} else {
+			grid.clear();
 		}
 		for (int y = 0; y < level.getHeight(); y++) {
 			for (int x = 0; x < level.getWidth(); x++) {
-				Cell tile = new Cell(x, y);
-				tile.addChar(TileGraphics.getCharForTile(level.getTile(x, y).getType()));
-				grid.setTile(tile);
+				grid.getCell(x, y).addCharacter(TileGraphics.getCharForTile(level.getTile(x, y).getType()));
 			}
 		}
-		grid.getTile(instance.level.getPlayer().getX(), instance.level.getPlayer().getY()).addChar('@');
+		grid.getCell(level.getPlayer().getX(), level.getPlayer().getY()).addCharacter('@');
 	}
 
 	private void createWindow() {
@@ -140,4 +144,9 @@ public class Graphics extends Canvas implements Runnable {
 		}
 	}
 	
+	public void setFont(Font font) {
+		if(font != null) {
+			this.font = font;
+		}
+	}
 }

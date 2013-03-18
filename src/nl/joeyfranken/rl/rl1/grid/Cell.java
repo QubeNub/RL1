@@ -51,7 +51,7 @@ public class Cell {
 		return y;
 	}
 
-	public void addChar(char c) {
+	public void addCharacter(char c) {
 		chars.add(new Character(c));
 	}
 

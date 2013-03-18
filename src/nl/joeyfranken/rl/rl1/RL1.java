@@ -14,8 +14,7 @@ public class RL1 {
 	
 	public RL1() {
 		level = new Level(1, 1);
-		Player player = new Player(level, 4, 4);
-		level.setPlayer(player);
+		level.setPlayer(new Player(level, 4, 3));
 		grid = new Grid(20, 15);
 		graphics = new Graphics(this);
 		graphics.setGrid(grid);

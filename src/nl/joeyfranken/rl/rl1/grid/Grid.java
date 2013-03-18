@@ -5,6 +5,7 @@ import java.awt.Graphics2D;
 public class Grid {
 
 	public static final boolean ANTIALIASING = true;
+	
 	private Cell[][] cells;
 	private int width, height;
 	
@@ -15,7 +16,7 @@ public class Grid {
 		for (int y = 0; y < cells[0].length; y++) {
 			for (int x = 0; x < cells.length; x++) {
 				cells[x][y] = new Cell(x, y);
-				cells[x][y].addChar('#');
+				cells[x][y].addCharacter('.');
 			}
 		}
 	}
@@ -28,13 +29,13 @@ public class Grid {
 		return height;
 	}
 
-	public void setTile(Cell cell) {
+	public void setCell(Cell cell) {
 		if(cell != null && cell.getX() < width && cell.getY() < height) {
 			cells[cell.getX()][cell.getY()] = cell;
 		}
 	}
 	
-	public Cell getTile(int x, int y) {
+	public Cell getCell(int x, int y) {
 		if(x < width && y < height) {
 			return cells[x][y];
 		}
@@ -55,5 +56,13 @@ public class Grid {
 				cells[x][y].tick();
 			}
 		}		
+	}
+	
+	public void clear() {
+		for (int y = 0; y < cells[0].length; y++) {
+			for (int x = 0; x < cells.length; x++) {
+				cells[x][y].clear();
+			}
+		}
 	}
 }

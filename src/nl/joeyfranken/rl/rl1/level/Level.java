@@ -1,5 +1,7 @@
 package nl.joeyfranken.rl.rl1.level;
 
+import java.util.ArrayList;
+
 import nl.joeyfranken.rl.rl1.entity.Entity;
 import nl.joeyfranken.rl.rl1.entity.Player;
 
@@ -21,18 +23,29 @@ public class Level {
 	
 	private Tile tiles[][];
 	private int width, height;
-
 	private Player player;
+	private ArrayList<Entity> entities;
 	
 	public Level(int width, int height) {
 		this.width = width;
 		this.height = height;
+		entities = new ArrayList<Entity>();
 		tiles = new Tile[width][height];
 		intArrayToLevel(defaultMap);
 	}
 	
-	public void setPlayer(Player player) {
-		this.player = player;
+	public void addEntity(Entity entity) {
+		if(entity != null) {
+			entities.add(entity);
+		}
+	}
+	
+	public void removeEntity(Entity entity) {
+		entities.remove(entity);
+	}
+	
+	public Player getPlayer() {
+		return player;
 	}
 
 	public int getWidth() {
@@ -43,9 +56,9 @@ public class Level {
 		return height;
 	}
 	
-	public void setTile(int x, int y, Tile type) {
+	public void setTile(int x, int y, Tile tile) {
 		if(x < width && y < height) {
-			tiles[x][y] = type;
+			tiles[x][y] = tile;
 		}
 	}
 
@@ -86,14 +99,14 @@ public class Level {
 		return null;
 	}
 
-	public Player getPlayer() {
-		return player;
-	}
-
 	public boolean isValidMove(Entity entity, int x, int y) {
-		if(x < width && y < height && x >= 0 && y >= 0 && tiles[x][y].isSolid()) {
+		if(tiles[x][y].isSolid()) {
 			return false;
 		}
 		return true;
+	}
+
+	public void setPlayer(Player player) {
+		this.player = player;
 	}
 }
