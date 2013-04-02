@@ -1,10 +1,10 @@
-package nl.joeyfranken.rl.RL1.Grid;
+package nl.joeyfranken.rl.rl1.grid;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
-import nl.joeyfranken.rl.RL1.graphics.Graphics;
+import nl.joeyfranken.rl.rl1.graphics.Graphics;
 
 public class Tile {
 	private int x, y;

@@ -9,6 +9,11 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferStrategy;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.Map.Entry;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -17,6 +22,7 @@ import nl.joeyfranken.rl.rl1.RL1;
 import nl.joeyfranken.rl.rl1.grid.Grid;
 import nl.joeyfranken.rl.rl1.input.KeyHandler;
 import nl.joeyfranken.rl.rl1.level.Level;
+import nl.joeyfranken.rl.rl1.menu.Menu;
 
 public class Graphics extends Canvas implements Runnable {
 
@@ -24,6 +30,8 @@ public class Graphics extends Canvas implements Runnable {
 	public static final int SCREEN_HEIGHT = 600;
 	public static final String GAME_TITLE = "RL1";
 	public final static int TILE_SIZE = 24;
+	public final static int TILE_SPACING = -4;
+	private static Font font;
 	
 	private static final long serialVersionUID = 896952198601396240L;
 	private boolean running;
@@ -31,19 +39,15 @@ public class Graphics extends Canvas implements Runnable {
 	private JPanel panel;
 	private BufferStrategy strategy;
 	private RL1 instance;
-	private Grid grid;
-	
-	public Font font;
+	private Map<Grid, Level> grids;
+	private ArrayList<Menu> menus;
 	
 	public Graphics(RL1 instance) {
 		this.instance = instance;
+		grids = new HashMap<Grid, Level>();
 		createWindow();
-		font = new Font("Lucida Console", Font.PLAIN, 14);
+		font = new Font("Lucida Console", Font.PLAIN, 20);
 		running = true;
-	}
-
-	public void tick() {
-		grid.tick();
 	}
 	
 	@Override
@@ -58,13 +62,13 @@ public class Graphics extends Canvas implements Runnable {
 			lastFpsTime += updateLength;
 			fps++;
 			
+			logic();
 			draw();
 			
 			if (lastFpsTime >= 1000000000) {
 				container.setTitle(GAME_TITLE + " - FPS: " + fps);
 				lastFpsTime = 0;
 				fps = 0;
-				tick();
 			}
 			try {
 				Thread.sleep((lastLoopTime - System.nanoTime()) / 1000000 + 17);
@@ -73,8 +77,17 @@ public class Graphics extends Canvas implements Runnable {
 			}
 		}
 	}
+	
+	private void logic() {
+	    Iterator<Entry<Grid, Level>> it = grids.entrySet().iterator();
+	    while (it.hasNext()) {
+	        Entry<Grid, Level> pairs = it.next();
+	        levelToGrid(pairs.getKey(), pairs.getValue());
+	        it.remove(); // avoids a ConcurrentModificationException
+	    }
+	}
 
-	public void draw() {
+	private void draw() {
 		Graphics2D g = (Graphics2D) strategy.getDrawGraphics();
 		BufferedImage img = new BufferedImage(SCREEN_WIDTH, SCREEN_HEIGHT, BufferedImage.TYPE_INT_RGB);
 		Graphics2D drawG = img.createGraphics();
@@ -91,16 +104,29 @@ public class Graphics extends Canvas implements Runnable {
 	}
 	
 	private void drawGrid(Graphics2D drawG) {
-		setGrid(instance.level);
-		if(grid != null) grid.draw(drawG);
+		//setGrid(instance.level);
+		System.out.println(grids.size());
+		for(Object grid: grids.keySet()) {
+			System.out.println("drawing grid");
+			((Grid) grid).draw(drawG);
+		}
+	}
+	
+	public void addGrid(Grid grid, Level level) {
+		levelToGrid(grid, level);
+		grids.put(grid, level);
 	}
 
-	public void setGrid(Level level) {
+	public void setGrid(Grid grid, Level level) {
 		if(grid.getWidth() != level.getWidth() || grid.getHeight() != level.getHeight()) {
-			grid = new Grid(level.getWidth(), level.getHeight());
+			grid = new Grid(grid.getX(), grid.getY(), level.getWidth(), level.getHeight());
 		} else {
 			grid.clear();
 		}
+		levelToGrid(grid, level);
+	}
+
+	private void levelToGrid(Grid grid, Level level) {
 		for (int y = 0; y < level.getHeight(); y++) {
 			for (int x = 0; x < level.getWidth(); x++) {
 				grid.getCell(x, y).addCharacter(TileGraphics.getCharForTile(level.getTile(x, y).getType()));
@@ -138,15 +164,13 @@ public class Graphics extends Canvas implements Runnable {
 		strategy = getBufferStrategy();
 	}
 
-	public void setGrid(Grid grid) {
-		if(grid != null) {
-			this.grid = grid;
-		}
-	}
-	
 	public void setFont(Font font) {
 		if(font != null) {
-			this.font = font;
+			Graphics.font = font;
 		}
+	}
+
+	public static Font getCurrentFont() {
+		return font;
 	}
 }

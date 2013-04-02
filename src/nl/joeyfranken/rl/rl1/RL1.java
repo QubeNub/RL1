@@ -15,9 +15,9 @@ public class RL1 {
 	public RL1() {
 		level = new Level(1, 1);
 		level.setPlayer(new Player(level, 4, 3));
-		grid = new Grid(20, 15);
+		grid = new Grid(0, 0, 12, 12);
 		graphics = new Graphics(this);
-		graphics.setGrid(grid);
+		graphics.addGrid(grid, level);
 		graphicsThread = new Thread(graphics);
 		graphicsThread.start();
 	}
@@ -27,6 +27,10 @@ public class RL1 {
 	 */
 	public static void main(String[] args) {
 		new RL1();
+	}
+
+	public void endGame() {
+		System.exit(0);
 	}
 
 }

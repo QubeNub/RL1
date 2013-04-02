@@ -1,7 +1,6 @@
 package nl.joeyfranken.rl.rl1.grid;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.util.ArrayList;
@@ -18,11 +17,11 @@ public class Cell {
 		chars = new ArrayList<Character>();
 	}
 
-	public void draw(Graphics2D g) {
+	public void draw(Graphics2D g, int xOffset, int yOffset) {
 		if (chars.size() == 0)
 			return;
 		g.setColor(Color.WHITE);
-		g.setFont(new Font("Lucida Console", Font.BOLD, 14));
+		g.setFont(Graphics.getCurrentFont());
 
 		g.setRenderingHint(RenderingHints.KEY_RENDERING,
 				RenderingHints.VALUE_RENDER_QUALITY);
@@ -34,13 +33,10 @@ public class Cell {
 					RenderingHints.VALUE_ANTIALIAS_OFF);
 		}
 
-		int x = (this.x * Graphics.TILE_SIZE + 10) - g.getFontMetrics().charWidth(chars.get(chars.size() - 1)) / 2;
-		int y = g.getFontMetrics().getMaxAscent() + (this.y * Graphics.TILE_SIZE + 10);
-		g.drawString(String.valueOf(chars.get(chars.size() - 1)), x, y);
+		int x = xOffset + (this.x * (Graphics.TILE_SIZE + Graphics.TILE_SPACING) + 10) - g.getFontMetrics().charWidth(chars.get(chars.size() - 1).getChar()) / 2;
+		int y = yOffset + g.getFontMetrics().getMaxAscent() + (this.y * (Graphics.TILE_SIZE + Graphics.TILE_SPACING) + 10);
+		g.drawString(String.valueOf(chars.get(chars.size() - 1).getChar()), x, y);
 
-	}
-
-	public void tick() {
 	}
 
 	public int getX() {
@@ -55,7 +51,7 @@ public class Cell {
 		chars.add(new Character(c));
 	}
 
-	public void removeCharacter(char character) {
+	public void removeCharacter(Character character) {
 		for (int i = 0; i < chars.size(); i++) {
 			if (chars.get(i) == character) {
 				chars.remove(i);

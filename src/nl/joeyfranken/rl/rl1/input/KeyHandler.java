@@ -27,6 +27,9 @@ public class KeyHandler implements KeyListener {
 		case KeyEvent.VK_LEFT:
 			instance.level.getPlayer().move(-1, 0);
 			break;
+		case KeyEvent.VK_ESCAPE:
+			instance.endGame();
+			break;
 		}
 	}
 

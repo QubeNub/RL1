@@ -1,7 +1,6 @@
-package nl.joeyfranken.rl.RL1.graphics;
+package nl.joeyfranken.rl.rl1.graphics;
 
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 

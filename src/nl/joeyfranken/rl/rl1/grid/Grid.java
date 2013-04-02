@@ -7,20 +7,38 @@ public class Grid {
 	public static final boolean ANTIALIASING = true;
 	
 	private Cell[][] cells;
-	private int width, height;
+	private int x, y, width, height;
 	
-	public Grid(int width, int height) {
+	public Grid(int x, int y, int width, int height) {
 		this.width = width;
 		this.height = height;
+		this.x = x;
+		this.y = y;
 		cells = new Cell[width][height];
-		for (int y = 0; y < cells[0].length; y++) {
-			for (int x = 0; x < cells.length; x++) {
-				cells[x][y] = new Cell(x, y);
-				cells[x][y].addCharacter('.');
+		for (int i = 0; i < cells[0].length; i++) {
+			for (int j = 0; j < cells.length; j++) {
+				cells[j][i] = new Cell(j, i);
+				cells[j][i].addCharacter('.');
 			}
 		}
 	}
 	
+	public int getX() {
+		return x;
+	}
+
+	public void setX(int x) {
+		this.x = x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public void setY(int y) {
+		this.y = y;
+	}
+
 	public int getWidth() {
 		return width;
 	}
@@ -45,17 +63,9 @@ public class Grid {
 	public void draw(Graphics2D g) {
 		for (int y = 0; y < cells[0].length; y++) {
 			for (int x = 0; x < cells.length; x++) {
-				cells[x][y].draw(g);
+				cells[x][y].draw(g, this.x, this.y);
 			}
 		}
-	}
-	
-	public void tick() {
-		for (int y = 0; y < cells[0].length; y++) {
-			for (int x = 0; x < cells.length; x++) {
-				cells[x][y].tick();
-			}
-		}		
 	}
 	
 	public void clear() {
